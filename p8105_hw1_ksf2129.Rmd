@@ -36,7 +36,7 @@ Origin refers to the weather station/airport, month as 1 denoting January, hour 
 
 There are `r nrow(early_january_weather)` rows (observations) and `r ncol(early_january_weather)` columns (variables) in the dataset.
 
-The mean temperature (in Fahrenheit) is `r mean(early_january_weather$temp)`. 
+The mean temperature (in Fahrenheit) is `r mean(pull(early_january_weather, temp))`. 
 
 # Scatterplot
 
@@ -45,4 +45,42 @@ ggplot(early_january_weather, aes(x = time_hour, y = temp, color = humid)) + geo
 ggsave("problem1_scatterplot.pdf", height = 4, width = 6) #save scatterplot
 ```
 
-The scatterplot shows a cyclical temperature pattern for the first half of January. The temperature seems to rise and fall throughout the day each day. The maximum value these cycles reach is steadily increasing from the beginning to the middle of the month, with the minimum temperatures steadily rising as well. Additionally, the humidity is generally low for a majority of the time period, but around January 10th, the humidity increases. However, just after January 14th, the temperature and humidity drops. 
+The scatterplot shows a cyclical temperature pattern for the first half of January. The temperature seems to rise and fall throughout the day each day. The maximum value these cycles reach is steadily increasing from the beginning to the middle of the month, with the minimum temperatures steadily rising as well. Additionally, the humidity is generally low for a majority of the time period, but around January 10th, the humidity increases. However, just after January 14th, the temperature and humidity both drop. 
+
+## Problem 2
+
+Create dataframe.
+
+```{r}
+problem2_df = tibble(
+  random_sample = rnorm(10), #sample of 10 with normal distribution
+  logical_vec = random_sample > 0, #logical vector
+  character_vec = 
+    c("this", "is", "a", "ten", "word", "long", "sentence", "in", "character", "vector"), #character vector
+  vec_factor = 
+    factor(
+      c("level 1", "level 2", "level 3", "level 1", "level 2", "level 3", "level 1", "level 2", "level 3", "level 1")
+      ) #factor vector
+)
+```
+
+Try to take the mean of each variable in the dataframe.
+
+```{r}
+mean(pull(problem2_df, random_sample))
+mean(pull(problem2_df, logical_vec))
+mean(pull(problem2_df, character_vec))
+mean(pull(problem2_df, vec_factor))
+```
+
+Taking the mean works for the random_sample variable and the logical vector. It does not work for the character vector or the factor vector, which both return NA. 
+
+Apply `as.numeric()` function.
+
+```{r eval = FALSE}
+as.numeric(pull(problem2_df, logical_vec)) #works
+as.numeric(pull(problem2_df, character_vec)) #does not work
+as.numeric(pull(problem2_df, vec_factor)) #works
+```
+
+The as.numeric function was successfully applied to the logical vector and the factor vector, but not to the character vector. This helps explain why taking the mean of the character vector resulted in NA, because it could not be converted to numerical values. However, even though taking the mean of the factor vector resulted in NA, it could still be converted to a numeric vector. 
